@@ -1,0 +1,182 @@
+/* Sidebar Menu */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  width: 15%; /* Fixed width */
+  background-color: var(--sidebar-bg);
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  transition: width 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+  box-sizing: border-box; /* Pastikan padding tidak mempengaruhi lebar */
+  border-right: 1px solid var(--table-border-color);
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+}
+
+/* align menu item middle in sidebar */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1; /* Allow menu items to expand */
+}
+/* style menu button */
+.sidebar ul li {
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: var(--sidebar-text-active);
+  display: block;
+  border-radius: 13px;
+  transition: background 0.3s;
+  gap: 5px; /* Space between icon and text */
+  font-size: 14px; /* Adjust size as needed */
+  padding: 13px;
+}
+
+.sidebar ul li i {
+  font-size: 12px;
+  color: var(--sidebar-icon); /* Adjust color if needed */
+}
+
+.sidebar ul li a:hover {
+  background: var(--sidebar-menu-hover);
+  border-radius: 13x;
+}
+
+.sidebar ul li.active a {
+  background: var(--sidebar-menu-active); /* Highlight color */
+  border-radius: 13px;
+  color: var (--sidebar-text-active); /* Active text color */
+}
+
+.powered-by {
+  display: flex;
+  flex-direction: column; /* Bikin vertikal */
+  align-items: center; /* Tengahin isinya */
+  gap: 4px; /* Jarak antara teks dan logo */
+  font-size: 8px;
+  color: var(--sidebar-powered-by);
+  padding-bottom: 30px; /* Adjust spacing */
+  margin-top: 20px;
+}
+
+.openai-logo {
+  width: 60px;
+  padding-top: 5px;
+  display: block;
+  margin: auto;
+}
+
+/* logo Diri sidebar */
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  display: flex;
+}
+
+.logo {
+  width: 50px; /* Adjust the size as needed */
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+/* Sidebar can be collapsed */
+.sidebar.collapsed {
+  width: 7%; /* Collapsed width */
+  padding: 20px;
+  align-items: center;
+}
+
+.sidebar.collapsed .menu a span {
+  display: none; /* Hide text when collapsed */
+}
+
+/* Hidden class to toggle visibility */
+.hidden {
+  display: none;
+}
+
+.sidebar .menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.sidebar.collapsed .menu a {
+  justify-content: center;
+}
+
+.sidebar.collapsed .menu a i {
+  font-size: 18px; /* Adjust icon size */
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Sidebar menu items */
+.sidebar-menu li {
+  align-items: center;
+  white-space: nowrap;
+}
+
+/*icoon sidebar*/
+.sidebar-menu li i {
+  font-size: 20px;
+  margin: 5px;
+}
+
+.sidebar.collapsed .sidebar-menu li span {
+  display: none; /* Hide text when collapsed */
+}
+
+.sidebar.collapsed .sidebar-menu li {
+  justify-content: center;
+}
+
+/* Toggle Button */
+#toggleSidebar {
+  background: none;
+  color: var(--sidebar-toogle);
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 10px;
+  color: var (--sidebar-text-active); /* Active text color */
+  border: 1px solid var(--table-border-color);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  padding: 5px 10px;
+}
+
+/* OPEN AI image Sembunyikan semua tema-image secara default */
+.theme-image {
+  display: none;
+}
+
+body.dark-mode .dark-image {
+  display: inline;
+}
+
+body:not(.dark-mode) .light-image {
+  display: inline;
+}

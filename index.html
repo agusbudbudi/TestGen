@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="public/assets/icons/favicon.ico"
+    />
+    <title>AI Test Case Generator</title>
+    <link rel="stylesheet" href="public/css/style.css" />
+    <link rel="stylesheet" href="public/css/modalStyle.css" />
+    <link rel="stylesheet" href="public/css/headerStyle.css" />
+    <link rel="stylesheet" href="public/css/historyStyle.css" />
+    <link rel="stylesheet" href="public/css/buttonStyle.css" />
+    <link rel="stylesheet" href="public/css/themes.css" />
+    <link rel="stylesheet" href="public/css/sidebarStyle.css" />
+    <link rel="stylesheet" href="public/css/textareaStyle.css" />
+    <!-- Light/Dark mode styles -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Modal Overlay (Gray Background) -->
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeApiKeyModal()">&times;</span>
+        <h3>Set OpenAI API Key</h3>
+        <input
+          type="text"
+          id="apiKeyInput"
+          placeholder="Enter OpenAI API Key"
+        />
+        <button class="primary-button" onclick="setApiKey()">Save</button>
+        <button class="secondary-button" onclick="clearApiKey()">Clear</button>
+      </div>
+    </div>
+
+    <!-- How to Use -->
+    <div id="howToUseModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeHowToUseModal()">&times;</span>
+        <h3>How To Use</h3>
+        <p>
+          <li>
+            <b>Enter Prompt</b>: QA should input a User Story and detailed
+            prompt same as provided template, including Preconditions,
+            Acceptance Criteria, Constraints, and Test Case Structure.
+          </li>
+          <li>
+            <b>Generate:</b> click Generate button after entering the prompt to
+            generate test cases using AI.
+          </li>
+          <li>
+            <b>Table Results:</b> The generated test cases will appear in the
+            below.
+          </li>
+          <li>
+            <b>Add to History:</b> Add generated test result to history menu.
+          </li>
+          <li><b>Export to Excel:</b> Export generated test cases to Excel.</li>
+          <li><b>Copy Test Case:</b> Copy generated test cases.</li>
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Sidebar Menu -->
+      <div class="sidebar" id="sidebar">
+        <div class="logo-container">
+          <img
+            src="https://diricare.com/images/ic-diri-header.svg"
+            alt="Logo"
+            class="logo"
+          />
+        </div>
+        <ul class="sidebar-menu">
+          <li class="active">
+            <a href="#" onclick="showSection('generate')">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span> Generate Test Case</span>
+            </a>
+          </li>
+          <li class="history-menu-btn">
+            <a href="#" onclick="showSection('history')">
+              <i class="fas fa-history"></i>
+              <span> History</span>
+            </a>
+          </li>
+          <!-- setup api keys -->
+          <li>
+            <a href="#" onclick="showApiKeyModal()">
+              <i class="fas fa-code"></i><span>API Key</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Toogle sidebar -->
+        <button id="toggleSidebar" class="secondary-button">☰</button>
+
+        <!-- Powered by OpenAI -->
+        <div class="powered-by">
+          <span>Powered by</span>
+          <img
+            src="https://ai.ls/assets/openai-logos/PNGs/openai-white-lockup.png"
+            alt="Dark Mode Image"
+            class="openai-logo theme-image dark-image"
+          />
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/OpenAI_Logo.svg/1024px-OpenAI_Logo.svg.png"
+            alt="Light Mode Image"
+            class="openai-logo theme-image light-image"
+          />
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="content" id="mainContent">
+        <!-- Gambar Default -->
+        <!-- Generate Test Case Section -->
+        <div id="generate" class="section" class="center-container">
+          <!-- Sticky Header -->
+          <div id="stickyHeader" class="sticky-header">
+            <h2>AI Test Case Generator</h2>
+            <button id="toggleTheme" class="secondary-button">
+              <span id="themeIcon">🌙</span>
+            </button>
+          </div>
+          <div class="input-container">
+            <!-- Template and How To Use -->
+            <div class="button-container">
+              <div class="left-buttons">
+                <!-- TEMPLATE and HOW TO USE -->
+                <div class="badge" onclick="applyTemplate()">
+                  <div class="icon-container">
+                    <i class="fa-regular fa-paste badge-icon"></i>
+                  </div>
+                  <div class="text-content">
+                    <p class="title">Use Template</p>
+                    <p class="description">
+                      Gunakan template yang tersedia untuk mengisi User Story
+                      dan Prompt.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="badge" onclick="showHowToUseModal()">
+                  <div class="icon-container">
+                    <i class="fa-regular fa-lightbulb badge-icon"></i>
+                    <!-- Regular -->
+                  </div>
+                  <div class="text-content">
+                    <p class="title">How To Use</p>
+                    <p class="description">
+                      Ikuti langkah-langkah berikut untuk menggunakan AI Test
+                      Case Generator
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <textarea id="userStory" placeholder="Enter User Story"></textarea>
+
+            <textarea
+              id="prompt"
+              placeholder="Enter detailed prompt contain Preconditions, Acceptance Criteria, Constraints, and Test Case Structure"
+            ></textarea>
+
+            <!-- Button to generate test cases -->
+            <div class="button-container">
+              <div class="left-buttons">
+                <button
+                  id="addToHistoryButton"
+                  class="secondary-button"
+                  onclick="addResultToHistory()"
+                >
+                  <i class="fa-solid fa-clock-rotate-left"></i>
+                  Add to History
+                </button>
+
+                <button class="secondary-button" onclick="exportToExcel()">
+                  <i class="fa-regular fa-file-excel"></i>
+                  Export to Excel
+                </button>
+                <button class="secondary-button" id="copyTestCaseButton">
+                  <i class="fa-regular fa-copy"></i>
+                  Copy Test Case
+                </button>
+              </div>
+              <button
+                class="primary-button"
+                id="generateButton"
+                onclick="generateTestCaseAndStoreHistory()"
+              >
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                Generate
+              </button>
+            </div>
+
+            <div id="loadingAnimation" class="hidden">
+              <div class="spinner"></div>
+              <p>Generating test cases...</p>
+            </div>
+
+            <div class="table-container">
+              <table id="resultTable" class="hidden">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Section</th>
+                    <th>Case Type</th>
+                    <th>Title</th>
+                    <th>Precondition</th>
+                    <th>Step</th>
+                    <th>Expected Result</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- History Section -->
+        <div
+          id="history"
+          class="section"
+          style="display: none"
+          class="history-header center-container"
+        >
+          <!-- Sticky Header -->
+          <div id="stickyHeader" class="sticky-header">
+            <h2>Submitted Prompt History</h2>
+          </div>
+          <div class="chat-content">
+            <div id="historyList" class="chat-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="public/js/main.js"></script>
+    <script src="public/js/ui.js"></script>
+    <script src="public/js/table.js"></script>
+    <script src="public/js/theme.js"></script>
+    <script src="public/js/api.js"></script>
+  </body>
+</html>

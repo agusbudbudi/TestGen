@@ -1,0 +1,43 @@
+/* Sticky Header di dalam main-content */
+.sticky-header {
+  background-color: var(--sidebar-bg);
+  position: sticky;
+  top: 0;
+  padding: 5px 30px 5px 30px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 1000;
+  text-align: left;
+
+  /* Gunakan Flexbox */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease; /* Animasi smooth */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tombol Toggle Theme */
+#toggleTheme {
+  background: none;
+  border: 1px solid var(--table-border-color);
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  padding: 5px 10px;
+  margin-left: auto; /* Pindahkan tombol ke kanan */
+  transition: transform 0.2s ease-in-out;
+  background-color: var(--input-bg);
+}
+
+/* Efek klik */
+#toggleTheme:active {
+  transform: scale(0.9);
+}
+
+/* Efek perubahan ikon */
+#themeIcon {
+  display: inline-block;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
