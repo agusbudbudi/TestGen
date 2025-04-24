@@ -114,7 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Copy test case
+// Copy test case to clipboard
+//==========================================
 function copyTestCase() {
   const resultTable = document.getElementById("resultTable");
   const rows = resultTable.querySelectorAll("tbody tr");
@@ -126,25 +127,33 @@ function copyTestCase() {
 
   let copiedText = "";
 
-  // Iterate through table rows (Skipping header and separator rows)
-  rows.forEach((row, index) => {
+  rows.forEach((row) => {
     const cells = row.querySelectorAll("td");
     let rowData = [];
 
     cells.forEach((cell) => {
-      let cellText = cell.innerText.trim(); // Remove extra spaces
-      cellText = cellText.replace(/[\n\r]+/g, " "); // Replace newlines with spaces
+      // Ganti <br> dengan \n, lalu bungkus seluruh teks dengan double quote untuk jaga-jaga
+      let cellText = cell.innerHTML
+        .replace(/<br\s*\/?>/gi, "\r\n") // Gunakan \r\n agar dianggap line-break di dalam sel
+        .replace(/&nbsp;/g, " ")
+        .replace(/<[^>]*>/g, "") // hapus sisa HTML
+        .trim();
+
+      // Bungkus teks multiline agar Google Sheets treat as single cell
+      if (cellText.includes("\r\n")) {
+        cellText = `"${cellText}"`; // penting agar tidak split ke baris
+      }
+
       rowData.push(cellText);
     });
 
-    copiedText += rowData.join("\t") + "\n"; // Tab-separated values
+    copiedText += rowData.join("\t") + "\n";
   });
 
-  // Copy to clipboard
   navigator.clipboard
     .writeText(copiedText)
-    .then(() => alert("Test cases copied successfully!"))
-    .catch(() => alert("Failed to copy test cases."));
+    .then(() => alert("✅ Test cases copied with proper multiline cells!"))
+    .catch(() => alert("❌ Failed to copy test cases."));
 }
 
 // Attach event listener to button
