@@ -1,5 +1,17 @@
 # AI Test Case Generator
 
+A powerful tool to automatically generate comprehensive test cases using AI technology. This tool helps QA engineers and developers create structured test scenarios efficiently.
+
+## Features
+
+- AI-powered test case generation
+- Export to multiple formats (Excel, Google Sheets)
+- Dark/Light theme support
+- Chat history tracking
+- Custom test case templates
+- Bulk test case generation
+- Real-time preview
+
 ## Project Structure
 
 ```
@@ -25,24 +37,94 @@ index.html
 README.md
 ```
 
+## Prerequisites
+
+- Node.js 14.x or higher
+- Modern web browser (Chrome, Firefox, Safari)
+- Internet connection for AI API calls
+
 ## Setup Instructions
 
-1. Clone the repository.
-2. Ensure all dependencies are installed (if using Node.js, run `npm install`).
-3. Open `index.html` in a web browser to view the application.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/ai-test-generator.git
+   cd ai-test-generator
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure environment variables:
+   - Copy `.env.example` to `.env`
+   - Add your AI API credentials
+4. Start the application:
+   ```bash
+   npm start
+   ```
 
 ## Usage Guidelines
 
-- The application allows users to generate test cases in a structured format compatible with Google Sheets.
-- Use the sidebar to navigate between generating test cases and viewing the history of submitted prompts.
-- The application supports exporting test cases to Excel format.
+### Generating Test Cases
+
+1. Select your test case template from the sidebar
+2. Enter your feature description or requirements
+3. Click "Generate Test Cases"
+4. Review and edit generated test cases
+5. Export to your preferred format
+
+### Managing History
+
+- All generated test cases are automatically saved
+- Access previous test cases from the History tab
+- Filter and search through past generations
+- Clone and modify existing test cases
+
+## Configuration
+
+The application can be customized through the `config.json` file:
+
+- API endpoints
+- Template formats
+- Export settings
+- Theme preferences
+
+## Troubleshooting
+
+Common issues and solutions:
+
+- **API Connection Failed**: Check your internet connection and API credentials
+- **Export Issues**: Ensure proper file permissions
+- **Generation Timeout**: Try reducing the complexity of your input
 
 ## Contributing
 
-- Fork the repository and create a new branch for your feature or bug fix.
-- Ensure your code follows the project's coding standards.
-- Submit a pull request for review.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow the existing code style
+- Add tests for new features
+- Update documentation as needed
+- Test across different browsers
+
+## Support
+
+For support, please:
+
+1. Check the [FAQ](./docs/FAQ.md)
+2. Search existing issues
+3. Create a new issue with detailed information
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- OpenAI for API support
+- Contributors and testers
+- Open source community
