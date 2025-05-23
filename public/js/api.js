@@ -8,11 +8,6 @@ async function generateTestCase() {
   // ✅ New: Combine `userStory` and `promptDescription` into a single prompt
   const combinedPrompt = `User Story: ${userStory}\n\nPrompt: ${prompt}`;
 
-  // if (!prompt.trim()) {
-  //   alert("Masukkan prompt terlebih dahulu!");
-  //   return;
-  // }
-
   // ✅ Fix: Ensure prompt is not empty (checks the combined input now)
   if (!combinedPrompt.trim()) {
     alert("Masukkan User Story dan Prompt terlebih dahulu!");
@@ -57,17 +52,6 @@ async function generateTestCase() {
 
     if (parsedData.length > 1) {
       resultTable.classList.remove("hidden");
-
-      // // Populate table
-      // parsedData.slice(1).forEach((row) => {
-      //   const tr = document.createElement("tr");
-      //   row.forEach((cell) => {
-      //     const td = document.createElement("td");
-      //     td.textContent = cell;
-      //     tr.appendChild(td);
-      //   });
-      //   tbody.appendChild(tr);
-      // });
 
       // Populate table UPDATE Table biar precond step dan expected result bisa multiline
       parsedData.slice(1).forEach((row) => {
@@ -164,13 +148,13 @@ function updateHistory() {
 
     if (entry.type === "prompt") {
       chatBubble.classList.add("even-bubble");
-      chatBubble.innerHTML = `<strong>Prompt:</strong> ${content}
-       <button class="delete-btn" onclick="deleteHistory(${index})">❌ Delete</button>`;
+      chatBubble.innerHTML = `<div><strong>Prompt:</strong><br> ${content}</div>
+       <div class="button-section"><button class="delete-btn" onclick="deleteHistory(${index})"><i class="uil uil-trash"></i> Delete</button></div>`;
     } else if (entry.type === "result") {
       chatBubble.classList.add("odd-bubble");
-      chatBubble.innerHTML = `<strong>Test Case Result:</strong><br>
-        <pre>${formatTableData(content)}</pre>
-        <button class="delete-btn" onclick="deleteHistory(${index})">❌ Delete</button>`;
+      chatBubble.innerHTML = `<div class="chat"><strong>Test Case Result:</strong><br>
+        <pre>${formatTableData(content)}</pre></div>
+        <div class="button-section"><button class="delete-btn" onclick="deleteHistory(${index})"><i class="uil uil-trash"></i> Delete</button></div>`;
     }
 
     historyList.appendChild(chatBubble);

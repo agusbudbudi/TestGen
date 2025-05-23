@@ -79,7 +79,7 @@ function toggleSidebar() {
   sidebar.classList.toggle("collapsed");
 
   // Adjust content width
-  content.style.width = sidebar.classList.contains("collapsed") ? "93%" : "85%";
+  content.style.width = sidebar.classList.contains("collapsed") ? "87%" : "79%";
 
   // Save state in localStorage
   localStorage.setItem(
@@ -95,9 +95,9 @@ function loadSidebarState() {
 
   if (localStorage.getItem("sidebarCollapsed") === "true") {
     sidebar.classList.add("collapsed");
-    content.style.width = "93%";
+    content.style.width = "87%";
   } else {
-    content.style.width = "85%"; //default width content main
+    content.style.width = "79%"; //default width content main
   }
 }
 
@@ -114,8 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Copy test case to clipboard
-//==========================================
 function copyTestCase() {
   const resultTable = document.getElementById("resultTable");
   const rows = resultTable.querySelectorAll("tbody tr");
@@ -132,27 +130,29 @@ function copyTestCase() {
     let rowData = [];
 
     cells.forEach((cell) => {
-      // Ganti <br> dengan \n, lalu bungkus seluruh teks dengan double quote untuk jaga-jaga
       let cellText = cell.innerHTML
-        .replace(/<br\s*\/?>/gi, "\r\n") // Gunakan \r\n agar dianggap line-break di dalam sel
-        .replace(/&nbsp;/g, " ")
-        .replace(/<[^>]*>/g, "") // hapus sisa HTML
+        .replace(/<br\s*\/?>/gi, "\r\n") // Ganti <br> jadi \r\n
+        .replace(/&nbsp;/g, " ") // Ganti &nbsp; jadi spasi biasa
+        .replace(/<[^>]*>/g, "") // Hapus tag HTML lain
         .trim();
 
-      // Bungkus teks multiline agar Google Sheets treat as single cell
-      if (cellText.includes("\r\n")) {
-        cellText = `"${cellText}"`; // penting agar tidak split ke baris
+      // Escape double quotes di dalam cell (jadi double-double quotes "")
+      cellText = cellText.replace(/"/g, `""`);
+
+      // Jika ada \r\n (multiline) atau ada double quote, bungkus dengan quote
+      if (cellText.includes("\r\n") || cellText.includes('"')) {
+        cellText = `"${cellText}"`;
       }
 
       rowData.push(cellText);
     });
 
-    copiedText += rowData.join("\t") + "\n";
+    copiedText += rowData.join("\t") + "\n"; // Tab antar kolom, newline antar baris
   });
 
   navigator.clipboard
     .writeText(copiedText)
-    .then(() => alert("✅ Test cases copied with proper multiline cells!"))
+    .then(() => alert("✅ Test cases copied with proper multiline and quotes!"))
     .catch(() => alert("❌ Failed to copy test cases."));
 }
 
@@ -178,24 +178,30 @@ function setApiKey() {
     localStorage.setItem("OPENAI_API_KEY", apiKey);
     alert("API Key saved successfully!");
     closeApiKeyModal();
+    apiKeyInput.placeholder = "API key sudah tersimpan";
+    apiKeyInput.value = ""; // Pastikan tidak auto-isi demi keamanan
+    apiKeyInput.disabled = true;
   } else {
     alert("Please enter a valid API Key.");
   }
 }
 
 // Load saved API Key (optional: auto-fill input field if key exists)
-document.addEventListener("DOMContentLoaded", () => {
-  const savedKey = localStorage.getItem("OPENAI_API_KEY");
-  if (savedKey) {
-    document.getElementById("apiKeyInput").value = savedKey;
-  }
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//   const savedKey = localStorage.getItem("OPENAI_API_KEY");
+//   if (savedKey) {
+//     document.getElementById("apiKeyInput").value = savedKey;
+//   }
+// });
 
 function clearApiKey() {
   localStorage.removeItem("OPENAI_API_KEY"); // Remove from storage
   document.getElementById("apiKeyInput").value = ""; // Clear input field
   alert("API Key has been cleared.");
   closeApiKeyModal(); // Auto-close the modal after clicking "OK"
+  apiKeyInput.placeholder = "Enter OpenAI API Key";
+  apiKeyInput.value = ""; // Pastikan tidak auto-isi demi keamanan
+  apiKeyInput.disabled = false;
 }
 
 function deleteHistory(index, type) {
@@ -237,25 +243,26 @@ function closeHowToUseModal() {
 
 // paste template
 function applyTemplate() {
-  const templateUserStory = `**User Story**: As a user a want to ...`;
-  const templatePrompt = `**Preconditions**: 
-**AcceptanceCriteria**: 
+  const templateUserStory = `User Story: `;
+  const templatePrompt = `Preconditions: 
+AcceptanceCriteria: 
 
-**Constraints**: 
 
-**Formatting table**
+Constraints: 
+
+Formatting table
 - create in table format only show content without header column section
 - use <br> line breaks in the generated test case text
 - Use Gherkin syntax (Given, When, Then) for test case preconditions, steps, and expected results.
 
 Test cases should follow this structure:
-- **Column A**: No (numbering)
-- **Column B**: Section (feature name)
-- **Column C**: Case Type (positive/negative/edge case)
-- **Column D**: Title (concise comprehensive summary contains the item to be verified)  
-- **Column E**: Precondition (**dash list**)  
-- **Column F**: Step (**numbered list**)
-- **Column G**: Expected Result (**dash list**)
+- Column A: No (numbering)
+- Column B: Section (feature name)
+- Column C: Case Type (positive/negative/edge case)
+- Column D: Title (concise comprehensive summary contains the item to be verified)  
+- Column E: Precondition (dash list)  
+- Column F: Step (numbered list)
+- Column G: Expected Result (dash list)
 `;
 
   document.getElementById("userStory").value = templateUserStory;

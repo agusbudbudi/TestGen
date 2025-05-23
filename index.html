@@ -12,11 +12,13 @@
     <link rel="stylesheet" href="public/css/style.css" />
     <link rel="stylesheet" href="public/css/modalStyle.css" />
     <link rel="stylesheet" href="public/css/headerStyle.css" />
-    <link rel="stylesheet" href="public/css/historyStyle.css" />
     <link rel="stylesheet" href="public/css/buttonStyle.css" />
+    <link rel="stylesheet" href="public/css/badgeStyle.css" />
     <link rel="stylesheet" href="public/css/themes.css" />
     <link rel="stylesheet" href="public/css/sidebarStyle.css" />
     <link rel="stylesheet" href="public/css/textareaStyle.css" />
+    <link rel="stylesheet" href="public/css/historyStyle.css" />
+    <link rel="stylesheet" href="public/css/reviewTestCase.css" />
     <!-- Light/Dark mode styles -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -29,6 +31,15 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"
     />
   </head>
   <body>
@@ -91,26 +102,55 @@
         <ul class="sidebar-menu">
           <li class="active">
             <a href="#" onclick="showSection('generate')">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <!-- <i class="fa-solid fa-wand-magic-sparkles"></i> -->
+              <i class="uil uil-file-check-alt"></i>
               <span> Generate Test Case</span>
+            </a>
+          </li>
+          <!-- New menu Review Test Case -->
+          <li class="review-menu-btn">
+            <a href="#" onclick="showSection('review')">
+              <!-- <i class="fa-solid fa-robot"></i> -->
+              <!-- <i class="fa-solid fa-robot"></i> -->
+              <i class="uil uil-robot"></i>
+              <span class="mdi mdi-robot-happy-outline"></span>
+
+              <span> Review Test Case</span>
+            </a>
+          </li>
+          <!-- New menu AI Bug Assited -->
+          <li class="review-menu-btn">
+            <a href="#" onclick="showSection('bugReport')">
+              <!-- <i class="fa-solid fa-bug"></i> -->
+              <i class="uil uil-bug"></i>
+              <span> Bug Report</span>
             </a>
           </li>
           <li class="history-menu-btn">
             <a href="#" onclick="showSection('history')">
-              <i class="fas fa-history"></i>
+              <!-- <i class="fas fa-history"></i> -->
+              <i class="uil uil-history"></i>
               <span> History</span>
             </a>
           </li>
           <!-- setup api keys -->
           <li>
             <a href="#" onclick="showApiKeyModal()">
-              <i class="fas fa-code"></i><span>API Key</span>
+              <!-- <i class="fas fa-code"></i> -->
+              <i class="uil uil-arrow"></i>
+              <span>API Key</span>
             </a>
           </li>
         </ul>
 
+        <!-- Button change theme -->
+        <button id="toggleTheme" class="third-button">
+          <span id="themeIcon">🌙</span>
+        </button>
         <!-- Toogle sidebar -->
-        <button id="toggleSidebar" class="secondary-button">☰</button>
+        <button id="toggleSidebar" class="third-button">
+          <i class="uil uil-bars"></i>
+        </button>
 
         <!-- Powered by OpenAI -->
         <div class="powered-by">
@@ -135,10 +175,7 @@
         <div id="generate" class="section" class="center-container">
           <!-- Sticky Header -->
           <div id="stickyHeader" class="sticky-header">
-            <h2>AI Test Case Generator</h2>
-            <button id="toggleTheme" class="secondary-button">
-              <span id="themeIcon">🌙</span>
-            </button>
+            <h2>🧠 AI Test Case Generator</h2>
           </div>
           <div class="input-container">
             <!-- Template and How To Use -->
@@ -189,7 +226,8 @@
                   class="secondary-button"
                   onclick="addResultToHistory()"
                 >
-                  <i class="fa-solid fa-clock-rotate-left"></i>
+                  <!-- <i class="fa-solid fa-clock-rotate-left"></i> -->
+                  <i class="uil uil-history"></i>
                   Add to History
                 </button>
 
@@ -198,7 +236,8 @@
                   Export to Excel
                 </button>
                 <button class="secondary-button" id="copyTestCaseButton">
-                  <i class="fa-regular fa-copy"></i>
+                  <!-- <i class="fa-regular fa-copy"></i> -->
+                  <i class="uil uil-copy"></i>
                   Copy Test Case
                 </button>
               </div>
@@ -235,6 +274,126 @@
             </div>
           </div>
         </div>
+        <!-- Review Test Case Section -->
+        <div
+          id="review"
+          class="section"
+          style="display: none"
+          class="history-header center-container"
+        >
+          <!-- Sticky Header -->
+          <div id="stickyHeader" class="sticky-header">
+            <h2>🤖 AI Test Case Review</h2>
+          </div>
+          <div class="input-container">
+            <div class="button-container">
+              <div class="left-buttons">
+                <!-- Prefix Prompt -->
+                <div class="badge hidden" onclick="applyTemplate()">
+                  <div class="icon-container">
+                    <i class="fa-regular fa-paste badge-icon"></i>
+                  </div>
+                  <div class="text-content">
+                    <p class="title">Prefix Prompt</p>
+                    <p class="description">
+                      Edit prefix untuk menyesuaikan prompt review test cases
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <textarea
+              id="testCaseInput"
+              placeholder="Enter genereated test case to be reviewed"
+            ></textarea>
+
+            <!-- Button to generate test cases -->
+            <div class="button-container">
+              <div class="left-buttons"></div>
+              <button
+                class="primary-button"
+                id="reviewButton"
+                onclick="reviewTestCase()"
+              >
+                <i class="fa-solid fa-robot"></i>
+                Review Test Case
+              </button>
+            </div>
+            <!-- <div id="reviewResult" class="mt-4 space-y-2"></div> -->
+            <div
+              id="reviewResult"
+              class="opacity-0 transition-opacity duration-700"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Review Test Case Section -->
+        <div
+          id="bugReport"
+          class="section"
+          style="display: none"
+          class="bugReport-header center-container"
+        >
+          <!-- Sticky Header -->
+          <div id="stickyHeader" class="sticky-header">
+            <h2>🪲 Bug Report Generator</h2>
+          </div>
+          <div class="input-container">
+            <!-- <label for="bugReportInput" class="labelInput"
+              >Explain the bug:</label
+            > -->
+            <textarea
+              id="bugReportInput"
+              placeholder="explain your finded bug"
+            ></textarea>
+
+            <!-- Button to generate Bug Report -->
+            <div class="button-container">
+              <div class="left-buttons">
+                <button
+                  class="secondary-button"
+                  id="copyTestCaseButton"
+                  onclick="copyBugReport()"
+                >
+                  <!-- <i class="fa-regular fa-copy"></i> -->
+                  <i class="uil uil-copy"></i>
+                  Copy Bug Report
+                </button>
+              </div>
+              <button
+                class="primary-button"
+                id="bugReportButton"
+                onclick="generateBugReport()"
+              >
+                <!-- <i class="fa-solid fa-bug"></i> -->
+                <i class="uil uil-bug"></i>
+                Generate Bug Report
+              </button>
+            </div>
+
+            <div id="loadingBugReport" class="hidden">
+              <div class="spinner"></div>
+              <p>Generating Bug Report...</p>
+            </div>
+
+            <!-- Table bug report result -->
+            <div class="table-container">
+              <table id="bugReportTable" class="hidden">
+                <thead>
+                  <tr>
+                    <th>Summary</th>
+                    <th>Step to Reproduce</th>
+                    <th>Actual Result</th>
+                    <th>Expected Result</th>
+                    <th>Severity & Retest Result</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
         <!-- History Section -->
         <div
@@ -245,7 +404,7 @@
         >
           <!-- Sticky Header -->
           <div id="stickyHeader" class="sticky-header">
-            <h2>Submitted Prompt History</h2>
+            <h2>💬 Test Case History</h2>
           </div>
           <div class="chat-content">
             <div id="historyList" class="chat-container"></div>
@@ -259,5 +418,7 @@
     <script src="public/js/table.js"></script>
     <script src="public/js/theme.js"></script>
     <script src="public/js/api.js"></script>
+    <script src="public/js/reviewTestCase.js"></script>
+    <script src="public/js/generateBugReport.js"></script>
   </body>
 </html>
