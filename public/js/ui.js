@@ -1,11 +1,11 @@
-function setupUI() {
-  document.getElementById("sidebar").innerHTML = `
-        <ul>
-            <li><a href="#" onclick="showSection('testCaseSection')">Generate Test Case</a></li>
-            <li><a href="#" onclick="showSection('historySection')">History</a></li>
-        </ul>
-    `;
-}
+// function setupUI() {
+//   document.getElementById("sidebar").innerHTML = `
+//         <ul>
+//             <li><a href="#" onclick="showSection('testCaseSection')">Generate Test Case</a></li>
+//             <li><a href="#" onclick="showSection('historySection')">History</a></li>
+//         </ul>
+//     `;
+// }
 
 // Function to switch sections
 function showSection(sectionId) {
@@ -79,7 +79,7 @@ function toggleSidebar() {
   sidebar.classList.toggle("collapsed");
 
   // Adjust content width
-  content.style.width = sidebar.classList.contains("collapsed") ? "87%" : "79%";
+  content.style.width = sidebar.classList.contains("collapsed") ? "90%" : "82%";
 
   // Save state in localStorage
   localStorage.setItem(
@@ -95,9 +95,9 @@ function loadSidebarState() {
 
   if (localStorage.getItem("sidebarCollapsed") === "true") {
     sidebar.classList.add("collapsed");
-    content.style.width = "87%";
+    content.style.width = "90%";
   } else {
-    content.style.width = "79%"; //default width content main
+    content.style.width = "82%"; //default width content main
   }
 }
 
@@ -133,6 +133,9 @@ function copyTestCase() {
       let cellText = cell.innerHTML
         .replace(/<br\s*\/?>/gi, "\r\n") // Ganti <br> jadi \r\n
         .replace(/&nbsp;/g, " ") // Ganti &nbsp; jadi spasi biasa
+        .replace(/&amp;/g, "&") // UPDATE: Ganti &amp; jadi &
+        .replace(/&lt;/g, "<") // UPDATE: Ganti &lt; jadi <
+        .replace(/&gt;/g, ">") // UPDATE: Ganti &gt; jadi >
         .replace(/<[^>]*>/g, "") // Hapus tag HTML lain
         .trim();
 

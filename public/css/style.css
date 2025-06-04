@@ -11,7 +11,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   text-align: center;
-  transition: all 0.3s ease; /* Animasi smooth */
+  transition: all 0.3s ease;
 }
 
 /* Main Content */
@@ -19,19 +19,15 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* height: 100vh; */
   position: fixed;
-
   top: 0;
   bottom: 0;
   right: 0;
   overflow-y: auto;
   transition: width 0.3s ease, padding 0.3s ease;
 
-  margin-left: 4%;
-  /* border: 1px solid var(--table-border-color); */
-  border-radius: 20px;
-  margin: 2%;
+  border-radius: 14px;
+  margin: 1%;
   background-color: var(--bg-color);
 }
 
@@ -60,20 +56,22 @@ h1 {
 }
 
 /* TABLE RESULT STYLE */
-.table-container {
+
+/* .table-container { */
+.table-container:has(tbody tr) {
   width: 84%;
   display: flex;
   justify-content: center; /* Centers the table */
   margin-top: 20px; /* Adds spacing */
   margin-bottom: 20px; /* Adds spacing */
   transition: all 0.3s ease; /* Animasi smooth */
+  border-radius: 15px;
 }
 
 table {
   width: 100%; /* Same width as textarea */
   min-width: 800px; /* Prevents shrinking */
   border-collapse: collapse;
-  background: var(--input-bg);
   color: var(--text-color);
   border-radius: 15px;
   overflow: hidden;

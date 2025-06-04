@@ -5,11 +5,25 @@ async function generateBugReport() {
   const tbody = bugTable.querySelector("tbody");
 
   const combinedPrompt = `You are a QA specialist. Based on the following bug details, generate a **bug report** in a **Markdown table format** with these columns:
-  Summary | Step to Reproduce | Actual Result | Expected Result | Severity & Retest Result | 
-  Bug Details:
+  Summary | Description | Severity & Retest Result |
+
+    Where:
+  - Summary: Brief title/summary of the bug
+  - Description: Format as follows:
+    **Steps to Reproduce:**
+    1. Step one
+    2. Step two
+    3. Step three
+    **Actual Result:**
+    What actually happened
+    **Expected Result:**
+    What should have happened
+  - Severity & Retest Result: Bug severity level and retest status
+
+   Bug Details:
   ${bugDetails}`;
 
-  if (!combinedPrompt.trim()) {
+  if (!bugDetails.trim()) {
     alert("masukkan bug detail terlebih dahulu!");
     return;
   }
@@ -45,7 +59,6 @@ async function generateBugReport() {
 
     const data = await response.json();
     const resultText = data.choices[0]?.message?.content || "";
-    // const parsedData = parseGPTTable(resultText);
     const parsedData = parseBugReportTable(resultText);
 
     if (parsedData.length > 1) {
@@ -53,7 +66,14 @@ async function generateBugReport() {
 
       parsedData.slice(1).forEach((row) => {
         const tr = document.createElement("tr");
-        row.forEach((cell) => {
+
+        // Pastikan ada minimal 3 kolom, jika tidak cukup tambahkan kolom kosong
+        const processedRow =
+          row.length >= 3
+            ? row.slice(0, 3)
+            : [...row, ...Array(3 - row.length).fill("")];
+
+        processedRow.forEach((cell) => {
           const td = document.createElement("td");
           td.innerHTML = cell.replace(/\n/g, "<br>");
           tr.appendChild(td);
@@ -72,11 +92,12 @@ async function generateBugReport() {
   }
 }
 
+// Updated parseBugReportTable function
 function parseBugReportTable(gptResponse) {
   const lines = gptResponse
     .trim()
     .split("\n")
-    .filter((line) => line.includes("|") && !/^[-| ]+$/.test(line)); // Filter out separator rows like |----|
+    .filter((line) => line.includes("|") && !/^[-| ]+$/.test(line));
 
   const table = [];
 
@@ -84,18 +105,80 @@ function parseBugReportTable(gptResponse) {
     const columns = line
       .split("|")
       .map((col) => col.trim())
-      .filter((col) => col !== ""); // Remove empty columns
+      .filter((col) => col !== "");
 
     if (index === 0) {
-      // Header row
-      table.push(columns);
+      const headerColumns =
+        columns.length >= 3
+          ? columns.slice(0, 3)
+          : [...columns, ...Array(3 - columns.length).fill("")];
+      table.push(headerColumns);
     } else {
-      // Data rows
-      table.push(columns);
+      const formattedColumns = [];
+
+      // Column 1: Summary
+      formattedColumns[0] = formatMultiLine(columns[0] || "");
+
+      // Column 2: Description with special formatting
+      formattedColumns[1] = formatDescription(columns[1] || "");
+
+      // Column 3: Severity & Retest Result
+      formattedColumns[2] = formatMultiLine(columns[2] || "");
+
+      table.push(formattedColumns);
     }
   });
 
   return table;
+}
+
+// Format multiline text
+function formatMultiLine(text) {
+  if (!text) return "";
+
+  return text
+    .replace(/<br\s*\/?>/gi, "\n") // Replace all <br> variants with newline
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "") // Remove empty lines
+    .join("\n");
+}
+
+// New function to format description column specifically
+function formatDescription(text) {
+  if (!text) return "";
+
+  let formatted = text.trim();
+
+  // Replace section headers
+  formatted = formatted
+    .replace(
+      /\*\*Steps to Reproduce:\*\*/gi,
+      "<strong>📋 Steps to Reproduce:</strong>"
+    )
+    .replace(
+      /\*\*Step to Reproduce:\*\*/gi,
+      "<strong>📋 Steps to Reproduce:</strong>"
+    )
+    .replace(
+      /\*\*Actual Result:\*\*/gi,
+      "<strong>❌ Actual Result:</strong><br>"
+    )
+    .replace(
+      /\*\*Expected Result:\*\*/gi,
+      "<strong>✅ Expected Result:</strong><br>"
+    );
+
+  // Clean up <br> tags
+  formatted = formatted
+    .replace(/(<br\s*\/?>){3,}/gi, "<br><br>")
+    .replace(/(<br\s*\/?>)*(\s*<strong>)/gi, "<br><br>$2")
+    .replace(/(<\/strong>)(\s*<br\s*\/?>)+/gi, "$1<br>")
+    .replace(/^(<br\s*\/?>)+/gi, "")
+    .replace(/(<br\s*\/?>)+$/gi, "")
+    .replace(/^<br><br>/, "");
+
+  return formatted;
 }
 
 function copyBugReport() {
@@ -110,13 +193,7 @@ function copyBugReport() {
   let copiedText = "";
 
   // Tambahkan header di baris pertama
-  const headers = [
-    "Summary",
-    "Step to Reproduce",
-    "Actual Result",
-    "Expected Result",
-    "Severity & Retest Result",
-  ];
+  const headers = ["Summary", "Description", "Severity & Retest Result"];
   copiedText += headers.join("\t") + "\n";
 
   // Proses setiap baris data
@@ -128,6 +205,9 @@ function copyBugReport() {
       let cellText = cell.innerHTML
         .replace(/<br\s*\/?>/gi, "\r\n") // Ganti <br> dengan newline
         .replace(/&nbsp;/g, " ") // Ganti &nbsp; dengan spasi
+        .replace(/&amp;/g, "&") // UPDATE: Ganti &amp; jadi &
+        .replace(/&lt;/g, "<") // UPDATE: Ganti &lt; jadi <
+        .replace(/&gt;/g, ">") // UPDATE: Ganti &gt; jadi >
         .replace(/<[^>]*>/g, "") // Hapus tag HTML lain
         .trim();
 
@@ -148,6 +228,6 @@ function copyBugReport() {
   // Salin ke clipboard
   navigator.clipboard
     .writeText(copiedText)
-    .then(() => alert("✅ Bug report (with header) copied!"))
+    .then(() => alert("✅ Bug report copied!"))
     .catch(() => alert("❌ Failed to copy bug report."));
 }

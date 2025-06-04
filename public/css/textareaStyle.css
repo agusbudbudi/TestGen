@@ -14,7 +14,7 @@ textarea {
 #prompt,
 #testCaseInput,
 #bugReportInput {
-  height: 200px;
+  height: 180px;
 }
 
 ::placeholder {
